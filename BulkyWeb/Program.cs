@@ -1,7 +1,23 @@
+using BulkyWeb.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Connessione al database MariaDb
+var connectionString = builder.Configuration.GetConnectionString("BulkyMaria");
+var serverVersion = ServerVersion.AutoDetect(connectionString);
+builder.Services.AddDbContext<ApplicationDbContext>(
+        dbContextOptions => dbContextOptions
+            .UseMySql(connectionString, serverVersion)
+            // The following three options help with debugging, but should
+            // be changed or removed for production.
+            .LogTo(Console.WriteLine, LogLevel.Information)
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors()
+    );
 
 var app = builder.Build();
 
