@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BulkyWeb.Models;
+using BulkyWeb.Data;
 
-namespace BulkyWeb.Data
+namespace BulkyWeb.Controllers
 {
     public class CategoriesController : Controller
     {
@@ -48,15 +49,17 @@ namespace BulkyWeb.Data
             return View();
         }
 
+
         // POST: Categories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,DisplayOrder,CreatedDateTime")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Name,DisplayOrder")] Category category)
         {
             if (ModelState.IsValid)
             {
+                category.CreatedDateTime = DateTime.Now;
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
